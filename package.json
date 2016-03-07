@@ -1,0 +1,37 @@
+{
+  "name": "cheetah",
+  "author": "Bence Faludi",
+  "version": "0.1.0",
+  "description": "Command line interface for MSSQL",
+  "tags": [
+    "sql",
+    "mssql",
+    "cli"
+  ],
+  "keywords": [
+    "node",
+    "azure",
+    "cli",
+    "sql"
+  ],
+  "main": "./src/main.js",
+  "preferGlobal": "true",
+  "license": "MIT",
+  "engines" : {
+      "node" : ">=5.6.0" 
+  },
+  "repository" : { 
+      "type" : "git",
+      "url" : "https://github.com/wunderlist/cheetah.git"
+  },
+  "dependencies": {
+    "mssql": "3.1.x",
+    "sprintf": "0.1.x",
+    "markdown-table": "0.4.x",
+    "commander": "2.9.x"
+  },
+  "homepage": "https://github.com/wunderlist/cheetah",
+  "bin": {
+    "cheetah": "bin/cheetah.bin.js"
+  }
+}

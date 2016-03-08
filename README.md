@@ -98,7 +98,6 @@ The package supports multi-line queries and copy-paste. Moreover it provides aut
 
 ## What's next
 
-- Handle properly the previously executed multi-line queries in the history.
 - Fix returning date's format to not use datetime's format.
 - Show affected rows' number.
 

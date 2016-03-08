@@ -7,7 +7,7 @@ const mssql = require('mssql'),
 var Connection = class Connection{
 	static connect(config, callback) {
 		process.stderr.write(sprintf("Connecting to %s ... ", config.server));
-		mssql.connect(config, function(err) {
+		mssql.connect(config, (err) => {
 			if (err) {
 				process.stderr.write("FAIL\n");
 				process.stderr.write(err.toString());
@@ -32,7 +32,11 @@ var Connection = class Connection{
 		var results = [Object.keys(recordset[0])];
 		for (var i=0; i<recordset.length; i++) {
 			var obj = recordset[i];
-			results.push(Object.keys(obj).map(key => obj[key]));
+			results.push(Object.keys(obj).map(key => obj[key]).map((value) => {
+				return (value instanceof Date)
+					? value.toISOString().replace(/T/, ' ').replace(/\..+/, '')
+					: value;
+			}));
 		}
 		return results;
 	}

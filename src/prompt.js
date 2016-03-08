@@ -116,17 +116,32 @@ var Prompt = class Prompt{
 	}
 
 	completer(cmd) {
+		var quoteName = (name) => {
+			var re = new RegExp("[\\[]*([^\\[\\]]+)[\\]]*"),
+				unquoted = name.match(re)[1];
+			return sprintf("[%s]", unquoted);
+		}
 		var words = cmd.split(" "),
-			word = words.slice(-1)[0],
+			origWord = words.slice(-1)[0],
 			line = this.sql + "\n" + this.rl.line,
 			allSuggestions = this.getAvailableSuggestions(line);
+
+		var word = origWord.split(".").map(quoteName).join(".");
+		word = word.substring(0, word.length-1);
 
 		var hits = allSuggestions.filter((c) => {
 			return c.indexOf(word) == 0;
 		});
 
 		if (hits.length == 1) {
-			var craftedSuggestions = [cmd.substring(0, cmd.length-word.length) + hits[0]];
+			var craftedSuggestions = [cmd.substring(0, cmd.length-origWord.length) + hits[0]], // set the suggestion
+				leftOriginalLine = cmd.substring(0, cmd.length-origWord.length) + word, // add quotes to the left side
+				rightOriginalLine = this.rl.line.slice(cmd.length); // grab the right side of the original cmd
+
+			// WARNING: Awful hack & completly ignores the readline functionality!
+			this.rl.line = craftedSuggestions[0] + rightOriginalLine;
+			this.rl.cursor = craftedSuggestions[0].length;
+			craftedSuggestions = [""];
 		}
 		else if (hits.length == 0 || hits.length > 10) {
 			var craftedSuggestions = [];

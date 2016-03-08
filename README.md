@@ -11,6 +11,7 @@ You have to install [NodeJS](https://nodejs.org) (at least 5.6+) to use this pac
 ```sh
 $ git clone https://github.com/wunderlist/cheetah.git
 $ cd cheetah
+$ npm install
 $ npm install -g
 ```
 
@@ -98,8 +99,7 @@ The package supports multi-line queries and copy-paste. Moreover it provides aut
 ## What's next
 
 - Handle properly the previously executed multi-line queries in the history.
-- Suggestions/auto-completion without the quoted form. 
-- Fix returning date's format.
+- Fix returning date's format to not use datetime's format.
 - Show affected rows' number.
 
 ## License

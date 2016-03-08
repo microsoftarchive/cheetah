@@ -76,7 +76,7 @@ var Prompt = class Prompt{
 			historySize: 150
 		});
 		this.rl.on('line', this.actionOnLine.bind(this));
-		this.rl.on('SIGINT', this.closeOrReset.bind(this));
+		this.rl.on('SIGINT', this.closeOrCancelOrReset.bind(this));
 		this.updateAvailableSuggestions();
 	}
 
@@ -172,9 +172,13 @@ var Prompt = class Prompt{
 		this.rl.prompt();
 	}
 
-	closeOrReset() {
+	closeOrCancelOrReset() {
 		process.stdout.write("^C\n")
-		if (this.isEmptyCommand()) {
+		if (this.connection.currentRequest) {
+			this.connection.currentRequest.cancel();
+			return;
+		}
+		else if (this.isEmptyCommand()) {
 			this.close();
 		}
 		this.rl.clearLine(0);

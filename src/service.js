@@ -22,6 +22,7 @@ var Connection = class Connection{
 		this.verbose = config.verbose || false;
 		this.timing = config.timing || false;
 		this.stopOnError = true;
+		this.currentRequest = null;
 	}
 
 	close() {
@@ -72,12 +73,14 @@ var Connection = class Connection{
 			started = new Date().getTime();
 
 		request.multiple = true;
+		this.currentRequest = request;
 
 		if (options.verbose && !options.silent) {
 			process.stdout.write("\n" + sql.trim().split(" ")[0]);
 		}
 
 		request.batch(sql, ((err, recordset) => {
+			this.currentRequest = null;
 			if (err) {
 				process.stdout.write(sprintf("\nERROR: %s\n", err.toString()));
 				if (this.stopOnError) {

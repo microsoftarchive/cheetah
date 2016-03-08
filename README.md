@@ -11,7 +11,6 @@ You have to install [NodeJS](https://nodejs.org) (at least 5.6+) to use this pac
 ```sh
 $ git clone https://github.com/wunderlist/cheetah.git
 $ cd cheetah
-$ npm install
 $ npm install -g
 ```
 

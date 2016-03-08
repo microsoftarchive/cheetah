@@ -66,6 +66,7 @@ var Prompt = class Prompt{
 		this.connection = connection;
 		this.config = config;
 		this.sql = '';
+		this.fullCmd = '';
 		this.rs = {};
 
 		this.rl = readline.createInterface({
@@ -166,6 +167,7 @@ var Prompt = class Prompt{
 
 	reset() {
 		this.sql = '';
+		this.fullCmd = '';
 		this.rl.setPrompt(this.newPrompt);
 		this.rl.prompt();
 	}
@@ -233,23 +235,29 @@ var Prompt = class Prompt{
 
 	extendBatchCommand(cmd) {
 		this.sql += cmd + "\n";
+		this.rl.history.splice(0, 0, this.fullCmd + cmd); // WARNING: this is a hack that overrides the history functionality
+		this.fullCmd = '';
 		this.rl.setPrompt(this.newPrompt);
 		this.rl.prompt();
 	}
 
 	extendBatchResumedCommand(cmd) {
 		this.sql += cmd + "\n";
+		this.fullCmd += cmd + "\n";
 		this.rl.setPrompt(this.resumePrompt);
 		this.rl.prompt();
 	}
 
 	actionOnLine(cmd) {
+		// WARNING: this is a hack, we'll handle the history for ourselfs
+		this.rl.history = this.rl.history.slice(1);
+
 		var tCmd = cmd.trim();
 
-		if (this.isEmptyCommand() && staticCommands[tCmd]) {
+		if (staticCommands[tCmd]) {
 			staticCommands[tCmd](this);
 		}
-		else if (this.isEmptyCommand() && this.isBuiltInCommand(tCmd)) {
+		else if (this.isBuiltInCommand(tCmd)) {
 			this.runBuiltInSingleCommand(tCmd);
 		}
 		else if (tCmd.toUpperCase() == "GO") {

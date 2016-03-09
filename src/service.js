@@ -2,7 +2,8 @@
 
 const mssql = require('mssql'),
 	sprintf = require('sprintf').sprintf,
-	table = require('markdown-table');
+	table = require('markdown-table'),
+	moment = require('moment');
 
 var Connection = class Connection{
 	static connect(config, callback) {
@@ -31,12 +32,36 @@ var Connection = class Connection{
 
 	getRecords(recordset) {
 		var results = [Object.keys(recordset[0])];
+
 		for (var i=0; i<recordset.length; i++) {
 			var obj = recordset[i];
-			results.push(Object.keys(obj).map(key => obj[key]).map((value) => {
-				return (value instanceof Date)
-					? value.toISOString().replace(/T/, ' ').replace(/\..+/, '')
-					: value;
+			results.push(Object.keys(obj).map((key) => {
+				var value = obj[key];
+				if (!(value instanceof Date)) {
+					// TODO: Add support for other MSSQL types
+					return value;
+				}
+
+				var mvalue = moment.utc(value),
+					column = recordset.columns[key];
+				switch (column.type) {
+					case mssql.Date:
+						return mvalue.format('YYYY-MM-DD');
+					case mssql.DateTime:
+						return mvalue.format('YYYY-MM-DD HH:mm:ss.SSS');
+					case mssql.DateTime2:
+						return mvalue.format(sprintf('YYYY-MM-DD HH:mm:ss.%s', Array
+							.apply(null, Array(column.scale))
+							.map(k => 'S').join('')));
+					case mssql.DateTimeOffset:
+						return mvalue.format(sprintf('YYYY-MM-DD HH:mm:ss.%s Z', Array
+							.apply(null, Array(column.scale))
+							.map(k => 'S').join('')));
+					case mssql.SmallDateTime:
+						return mvalue.format('YYYY-MM-DD HH:mm');
+					default:
+						return value.toISOString().replace(/T/, ' ').replace(/\..+/, '');
+				}
 			}));
 		}
 		return results;
@@ -114,8 +139,7 @@ var Connection = class Connection{
 		options = options || {};
 		sql = this.prepare(options, sql);
 		var batches = sql.split("\nGO\n").filter((batch) => {return batch.trim() != ''}),
-			results = [],
-			self = this;
+			results = [];
 
 		if (batches.length == 0) {
 			callback(results, sql);

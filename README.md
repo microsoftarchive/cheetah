@@ -97,7 +97,6 @@ The package supports multi-line queries and copy-paste. Moreover it provides aut
 
 ## What's next
 
-- Fix returning date's format to not use datetime's format.
 - Show affected rows' number.
 
 ## License

@@ -127,6 +127,10 @@ var Prompt = class Prompt{
 			line = this.sql + "\n" + this.rl.line,
 			allSuggestions = this.getAvailableSuggestions(line);
 
+		if (!origWord) {
+			return [[], cmd];
+		}
+
 		var word = origWord.split(".").map(quoteName).join(".");
 		word = word.substring(0, word.length-1);
 

@@ -127,7 +127,7 @@ var Prompt = class Prompt{
 			line = this.sql + "\n" + this.rl.line,
 			allSuggestions = this.getAvailableSuggestions(line);
 
-		if (!origWord) {
+		if (!origWord || origWord == "[") {
 			return [[], cmd];
 		}
 

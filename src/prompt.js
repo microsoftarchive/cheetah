@@ -119,8 +119,8 @@ var Prompt = class Prompt{
 	completer(cmd) {
 		var quoteName = (name) => {
 			var re = new RegExp("[\\[]*([^\\[\\]]+)[\\]]*"),
-				unquoted = name.match(re)[1];
-			return sprintf("[%s]", unquoted);
+				m = name.match(re);
+			return sprintf("[%s]", ((m) ? m[1] : ""));
 		}
 		var words = cmd.split(" "),
 			origWord = words.slice(-1)[0],
@@ -143,7 +143,7 @@ var Prompt = class Prompt{
 				leftOriginalLine = cmd.substring(0, cmd.length-origWord.length) + word, // add quotes to the left side
 				rightOriginalLine = this.rl.line.slice(cmd.length); // grab the right side of the original cmd
 
-			// WARNING: Awful hack & completly ignores the readline functionality!
+			// WARNING: Awful hack & completely ignores the readline functionality!
 			this.rl.line = craftedSuggestions[0] + rightOriginalLine;
 			this.rl.cursor = craftedSuggestions[0].length;
 			craftedSuggestions = [""];

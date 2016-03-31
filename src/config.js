@@ -41,18 +41,18 @@ var Config = class Config{
 
 	get options() {
 		return {
-			user: this.cmd.username || process.env['MSSQL_USER'],
-			password: this.cmd.password || process.env['MSSQL_PASSWORD'],
-			server: this.cmd.server || process.env['MSSQL_HOST'],
-			database: this.cmd.database || process.env['MSSQL_DATABASE'],
+			user: (this.cmd.username || process.env['MSSQL_USER']).trim(),
+			password: (this.cmd.password || process.env['MSSQL_PASSWORD']).trim(),
+			server: (this.cmd.server || process.env['MSSQL_HOST']).trim(),
+			database: (this.cmd.database || process.env['MSSQL_DATABASE']).trim(),
 			requestTimeout: this.cmd.queryTimeout,
 			connectionTimeout: this.cmd.loginTimeout,
-			port: this.cmd.port || process.env['MSSQL_PORT'],
+			port: (this.cmd.port || process.env['MSSQL_PORT']).trim(),
 			verbose: this.cmd.verbose || false,
 			timing: this.cmd.timing || false,
 			options: {
 				tdsVersion: null,
-				encrypt: this.cmd.encrypt || (process.env['MSSQL_ENCRYPT'] == 'true'),
+				encrypt: this.cmd.encrypt || ((process.env['MSSQL_ENCRYPT'] || '').trim() == 'true'),
 				requestTimeout: null
 			}
 		};

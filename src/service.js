@@ -101,7 +101,11 @@ var Connection = class Connection{
 		this.currentRequest = request;
 
 		if (options.verbose && !options.silent) {
-			process.stdout.write("\n" + sql.trim().split(" ")[0]);
+			var firstWord = sql.trim().split(" ")[0],
+				comment = ((firstWord == "--")
+					? sql.trim().split("\n")[0]
+					: firstWord);
+			process.stdout.write("\n" + comment);
 		}
 
 		request.batch(sql, ((err, recordset) => {

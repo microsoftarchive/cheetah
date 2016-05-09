@@ -25,6 +25,11 @@ var Config = class Config{
 			this.cmd.help();
 			progress.exit(1);
 		}
+		if (!this.isCorrect()) {
+			process.stderr.write("\nServer, port and username are required. Please set at least these attributes!\n");
+			this.cmd.help();
+			progress.exit(1);
+		}
 	}
 
 	isInteractive() {
@@ -34,6 +39,11 @@ var Config = class Config{
 	isFromStdin() {
 		return (this.cmd.args.length == 0);
 	}
+	
+	isCorrect() {
+		var opt =  this.options;
+		return opt.user && opt.server && opt.port;
+	}
 
 	get filePath() {
 		return this.cmd.args[0];
@@ -41,13 +51,13 @@ var Config = class Config{
 
 	get options() {
 		return {
-			user: (this.cmd.username || process.env['MSSQL_USER']).trim(),
-			password: (this.cmd.password || process.env['MSSQL_PASSWORD']).trim(),
-			server: (this.cmd.server || process.env['MSSQL_HOST']).trim(),
-			database: (this.cmd.database || process.env['MSSQL_DATABASE']).trim(),
+			user: (this.cmd.username || process.env['MSSQL_USER'] || "").trim(),
+			password: (this.cmd.password || process.env['MSSQL_PASSWORD'] || "").trim(),
+			server: (this.cmd.server || process.env['MSSQL_HOST'] || "").trim(),
+			database: (this.cmd.database || process.env['MSSQL_DATABASE'] || "").trim(),
 			requestTimeout: this.cmd.queryTimeout,
 			connectionTimeout: this.cmd.loginTimeout,
-			port: (this.cmd.port || process.env['MSSQL_PORT']).trim(),
+			port: (this.cmd.port || process.env['MSSQL_PORT'] || "").trim(),
 			verbose: this.cmd.verbose || false,
 			timing: this.cmd.timing || false,
 			options: {

@@ -12,8 +12,8 @@ var Config = class Config{
 			.option('-U, --username <user>', 'login id')
 			.option('-P, --password <password>', 'password')
 			.option('-d, --database <database>', 'use database name')
-			.option('-l, --login-timeout <logintimeout>', 'login timeout', 999999)
-			.option('-t, --query-timeout <querytimout>', 'query timeout', 999999)
+			.option('-l, --login-timeout <logintimeout>', 'login timeout', 259200000) // three days
+			.option('-t, --query-timeout <querytimout>', 'query timeout', 259200000)
 			.option('-I, --interactive', 'interactive interface for query running')
 			.option('--encrypt', 'encrypt connection')
 			.option('--timing', 'print timing informations')
